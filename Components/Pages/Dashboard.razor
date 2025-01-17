@@ -1,0 +1,154 @@
+﻿@page "/dashboard"
+
+
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="header-left"></div>
+        <div class="header-right"></div>
+        <h1 class="dashboard-title">Dashboard</h1>
+    </div>
+
+    <!-- Date Filter Section -->
+    <div class="date-filter-section">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" @bind="startDate">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" @bind="endDate">
+        <button class="filter-button" @onclick="FilterTransactions">Filter</button>
+    </div>
+
+  
+    <div class="cards-section">
+        <div class="card total-credit">
+            <p>Total Credit</p>
+            <span>@totalCredit</span>
+        </div>
+        <div class="card total-debit">
+            <p>Total Debit</p>
+            <span>@totalDebit</span>
+        </div>
+        <div class="card total-debts">
+            <p>Total Debts</p>
+            <span>@totalDebts</span>
+        </div>
+        <div class="card total-transactions">
+            <p>Total Transactions</p>
+            <span>@totalAmount</span>
+        </div>
+    </div>
+
+
+    <div class="new-cards-section">
+        <div class="card total-credit">
+            <p>No.of Clear Debt</p>
+            <span>@clearDebt</span>
+        </div>
+        <div class="card remaining-debt">
+            <p>Remaining Debt</p>
+            <span>@remainingDebt</span>
+        </div>
+        <div class="card total-debts">
+            <p>Total Balance</p>
+            <span>@totalBalance</span>
+        </div>
+        <div class="card no-of-transactions">
+            <p>No. of Transactions</p>
+            <span>@totalTransactions</span>
+        </div>
+    </div>
+
+
+    <div class="transaction-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Tag</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Transactions)
+                {
+                    <tr>
+                        <td>@transaction.Title</td>
+                        <td>@transaction.TransactionType.ToString()</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@transaction.Tags</td>
+                        <td>@transaction.Note</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Button Section (Add New, etc.) -->
+    <div class="summary-buttons">
+        <a href="/addtransaction">
+            <button>Add New</button>
+        </a>
+        <button @onclick="ShowTopTransaction">Top 5</button>
+        <button @onclick="ShowLowTransaction">Lowest 5</button>
+    </div>
+    </div>
+@code {
+
+    private List<Transaction> Transactions { get; set; } = new List<Transaction>();
+    private List<Transaction> FilteredTransactions { get; set; } = new List<Transaction>();
+
+    private decimal totalCredit => TransactionOperations.GetTotal(Transactions, TransactionType.Credit);
+    private decimal totalDebit => TransactionOperations.GetTotal(Transactions, TransactionType.Debit);
+    private decimal totalDebts => TransactionOperations.GetTotal(Transactions, TransactionType.Debt);
+    private decimal remainingDebt => TransactionOperations.GetRemainingDebt(Transactions);
+    private int clearDebt => TransactionOperations.GetClearedDebtsCount(Transactions);
+    private decimal totalBalance => TransactionOperations.GetTotalBalance(Transactions);
+    private int totalTransactions => Transactions.Count;
+    private decimal totalAmount => Transactions.Sum(t => t.Amount);
+
+    private DateTime? startDate;
+    private DateTime? endDate;
+
+    // Check if the file exists, deserialize and show data
+    protected override async Task OnInitializedAsync()
+    {
+        Transactions = await TransactionOperations.LoadTransactionsAsync();
+        SortTransactionsByDate();  // Sort by date when initialized
+    }
+
+    private void SortTransactionsByDate()
+    {
+        // Sort by date in descending order 
+        Transactions = Transactions.OrderByDescending(t => t.Date).ToList();
+    }
+
+    private void FilterTransactions()
+    {
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            Transactions = Transactions.Where(t => t.Date >= startDate.Value && t.Date <= endDate.Value).ToList();
+        }
+        SortTransactionsByDate(); 
+    }
+
+
+      private void ShowTopTransaction()
+    {
+        var topTransactions = TransactionOperations.GetTopTransactions(Transactions, 5);  //Show top 5 
+        Transactions = topTransactions.Any() ? topTransactions : new List<Transaction>();
+    }
+
+    // Show the lowest transaction 
+    private void ShowLowTransaction()
+    {
+        var lowTransactions = TransactionOperations.GetLowTransactions(Transactions, 5);  // show low 5
+       Transactions = lowTransactions.Any() ? lowTransactions : new List<Transaction>();
+    }
+}
+
+
+

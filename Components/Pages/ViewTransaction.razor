@@ -1,0 +1,168 @@
+﻿@page "/viewtransaction"
+@using Trackit.Components.Pages
+@using Newtonsoft.Json
+@using System.IO
+
+
+
+<div class="container">
+    <h1>Transactions</h1>
+    <div class="filters">
+        <input type="text" placeholder="Tags" @bind="FilterTags" />
+        <input type="text" placeholder="Title" @bind="FilterTitle" />
+        <input type="date" placeholder="Start Date" @bind="FilterStartDate" />
+        <input type="date" placeholder="End Date" @bind="FilterEndDate" />
+        <select @bind="FilterType">
+            <option value="">Type</option>
+            <option value="Credit">Credit</option>
+            <option value="Debit">Debit</option>
+            <option value="Debt">Debt</option>
+        </select>
+        <button @onclick="ApplyFilters">Search</button>
+    </div>
+    <div class="summary-buttons">
+        <a href="/addtransaction">
+            <button>Add New</button>
+        </a>
+        <button @onclick="ShowTopTransaction">Top 5</button>
+        <button @onclick="ShowLowTransaction">Lowest 5</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Tag</th>
+                    <th>Note</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in FilteredTransactions)
+                {
+                    <tr>
+                        <td>@transaction.Title</td>
+                        <td>@transaction.TransactionType.ToString()</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@transaction.Tags</td>
+                        <td>@transaction.Note</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1>Pending Debts</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Remaining Amount</th>
+                    <th>Due Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var debt in Pendings)
+                {
+                    <tr>
+                        <td>@debt.Source</td>
+                        <td>@debt.Title</td>
+                        <td>@debt.Amount</td>
+                        <td>@debt.RemainingAmount</td>
+                        <td>@debt.DueDate?.ToString("yyyy-MM-dd")</td>
+                        <td class="actions">
+                            <a href="/cleardebt">
+                                <button class="clear">Clear</button>
+                            </a>
+                           
+                        </td>
+                    </tr>
+                }
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code{
+    private List<Transaction> Transactions { get; set; } = new List<Transaction>();
+    private List<Transaction> Pendings { get; set; } = new List<Transaction>();
+    private List<Transaction> FilteredTransactions { get; set; } = new List<Transaction>();
+
+    private string FilterTags { get; set; }
+    private string FilterTitle { get; set; }
+    private DateTime? FilterStartDate { get; set; }
+    private DateTime? FilterEndDate { get; set; }
+    private string FilterType { get; set; }
+
+    // this will be called when the page initializes
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the transactions from the file using the mwthod from TransactionOperations Class
+        Transactions = await TransactionOperations.LoadTransactionsAsync();
+        Pendings = TransactionOperations.GetPendingDebts(Transactions); // Get the pending debts that are not claer
+        FilteredTransactions = Transactions; // Default to show all transactions
+    }
+
+    // Filter transactions based on the search criteria
+    private void ApplyFilters()
+    {
+        var filtered = Transactions.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(FilterType))
+        {
+            if (Enum.TryParse<TransactionType>(FilterType, true, out var transactionType))
+            {
+                filtered = filtered.Where(t => t.TransactionType == transactionType);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(FilterTags))
+        {
+            filtered = filtered.Where(t => t.Tags.Contains(FilterTags, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.IsNullOrEmpty(FilterTitle))
+        {
+            filtered = filtered.Where(t => t.Title.Contains(FilterTitle, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (FilterStartDate.HasValue)
+        {
+            filtered = filtered.Where(t => t.Date >= FilterStartDate.Value);
+        }
+
+        if (FilterEndDate.HasValue)
+        {
+            filtered = filtered.Where(t => t.Date <= FilterEndDate.Value);
+        }
+
+        FilteredTransactions = filtered.ToList();
+    }
+
+    private void ShowTopTransaction()
+    {
+        var topTransactions = TransactionOperations.GetTopTransactions(Transactions, 5); 
+        FilteredTransactions = topTransactions.Any() ? topTransactions : new List<Transaction>();
+    }
+
+   
+    private void ShowLowTransaction()
+    {
+        var lowTransactions = TransactionOperations.GetLowTransactions(Transactions, 5); 
+        FilteredTransactions = lowTransactions.Any() ? lowTransactions : new List<Transaction>();
+    }
+
+
+   
+
+
+}

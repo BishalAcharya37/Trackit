@@ -1,0 +1,96 @@
+﻿@page "/debtmanage"
+@using Trackit.Components.Pages
+@using Newtonsoft.Json
+@inject NavigationManager Navigation
+
+<h3>Debt Management</h3>
+
+<!-- Table to display debts -->
+<table class="debt-table">
+    <thead>
+        <tr>
+            <th>Source</th>
+            <th>Title</th>
+            <th>Tag</th>
+            <th>Amount</th>
+            <th>Remaining Amount</th>
+            <th>Due Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in pendingDebts)
+        {
+            <tr>
+                <td>@transaction.Source</td>
+                <td>@transaction.Title</td>
+                <td>@transaction.Tags</td>
+                <td>@transaction.Amount</td>
+                <td>@transaction.RemainingAmount</td>
+                <td>@transaction.DueDate?.ToString("yyyy-MM-dd")</td>
+                <td class="actions">
+                    <button @onclick="() => NavigateToClearDebt(transaction)">Clear Debt</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<h3>Clear Debt</h3>
+
+<!-- Table to display debts -->
+<table class="debt-table">
+    <thead>
+        <tr>
+            <th>Source</th>
+            <th>Title</th>
+            <th>Tag</th>
+            <th>Amount</th>
+            <th>Remaining Amount</th>
+            <th>Due Date</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in clearDebts)
+        {
+            <tr>
+                <td>@transaction.Source</td>
+                <td>@transaction.Title</td>
+                <td>@transaction.Tags</td>
+                <td>@transaction.Amount</td>
+                <td>@transaction.RemainingAmount</td>
+                <td>@transaction.DueDate?.ToString("yyyy-MM-dd")</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    private List<Transaction> Transactions = new List<Transaction>();
+    private List<Transaction> pendingDebts = new List<Transaction>();
+    private List<Transaction> clearDebts  = new List<Transaction>();
+
+    // Load transactions and filter pending debts using TransactionOperations
+    protected override async Task OnInitializedAsync()
+    {
+        // Load transactions using TransactionOperations
+        Transactions = await TransactionOperations.LoadTransactionsAsync();
+
+        // Filter for debts that are not paid (IsClear is false)
+        pendingDebts = TransactionOperations.GetPendingDebts(Transactions);
+
+        clearDebts = TransactionOperations.GetClearDebts(Transactions);
+    }
+
+    // Navigate to ClearDebt page with the selected debt's data
+   private void NavigateToClearDebt(Transaction debt)
+    {
+        // Navigate to the ClearDebt page
+        Navigation.NavigateTo("/cleardebt");
+    
+    }
+}

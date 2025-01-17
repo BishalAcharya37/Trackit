@@ -1,0 +1,85 @@
+/* Form Container Centering */
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto; /* Center the form horizontally */
+    margin-top: 50px; /* Optional: space from the top of the page */
+}
+
+/* Title Styling */
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold; /* Make the title bold */
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 5px;
+    }
+
+/* Styling for the radio buttons */
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Button Styling (Primary Color Button) */
+.btn-save {
+    background-color: #1B99BB; /* Primary Color (PC) */
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+    .btn-save:hover {
+        background-color: #178C99; /* Darker shade of PC on hover */
+    }
+
+/* Optional: Styling for textarea */
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Styling for hiding the additional fields */
+#debtFields {
+    display: none;
+}
+
+/* For responsive layout */
+@media (max-width: 480px) {
+    .form-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .btn-save {
+        padding: 10px;
+    }
+}

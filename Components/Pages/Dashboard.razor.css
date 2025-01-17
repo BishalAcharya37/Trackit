@@ -1,0 +1,231 @@
+.dashboard-container {
+    width: 100%;
+    height: 100vh; /* Full height */
+    position: relative;
+    background: #f4f7fc; /* Light background color */
+    display: flex;
+    flex-direction: column;
+    padding-left: 220px; /* Space for sidebar */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Include padding in width and height calculations */
+    padding-bottom: 20px; /* Space for buttons */
+}
+
+/* Header Section */
+.header-section {
+    width: 100%;
+    height: 60px;
+    background: rgba(26.80, 152.56, 187.34, 0.87);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.dashboard-title {
+    color: #fff;
+    font-size: 30px;
+    font-family: Sansita;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Date Filter Section */
+.date-filter-section {
+    width: calc(100% - 240px); /* Adjust for sidebar */
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    margin-left: 20px;
+}
+
+    .date-filter-section label {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1E1E1E;
+    }
+
+    .date-filter-section input {
+        font-size: 14px;
+        padding: 10px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        max-width: 200px;
+    }
+
+    .date-filter-section .filter-button {
+        font-size: 16px;
+        padding: 10px 15px;
+        background: rgba(26.80, 152.56, 187.34, 0.87);
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+/* Cards Section (Total Credit, Debit, etc.) */
+.cards-section {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    width: 80%;
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+.card {
+    width: 220px;
+    height: 150px;
+    background: #1B99BB;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #1E1E1E;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card.total-debit {
+        background: #E25858;
+    }
+
+    .card.total-credit {
+        background: #81EDA3;
+    }
+
+    .card.total-debts {
+        background: #7294FA;
+    }
+
+    .card.total-transactions {
+        background: #1B99BB;
+    }
+
+/* New Cards Section (Declared Debts, Remaining Debt, Pending Debt, No. of Transactions) */
+.new-cards-section {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    width: 80%;
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+.card.declared-debts {
+    background: #4CAF50; /* Green */
+}
+
+.card.remaining-debt {
+    background: #F44336; /* Red */
+}
+
+.card.pending-debt {
+    background: #FFC107; /* Amber */
+}
+
+.card.no-of-transactions {
+    background: #1B99BB; /* Blue */
+}
+
+/* Table Section */
+.transactions-header {
+    width: calc(100% - 240px); /* Adjust for sidebar */
+    margin-top: 30px;
+    margin-left: 20px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    font-family: Sansita, sans-serif;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+/* Table Section */
+.transaction-table {
+    width: calc(100% - 240px); /* Take full width minus sidebar */
+    margin-top: 10px;
+    margin-left: 20px;
+    border-collapse: collapse;
+    font-family: Sarala, sans-serif;
+    font-weight: 700;
+    color: #1E1E1E;
+    background: #fff; /* Set to white background */
+    border-radius: 10px;
+}
+
+    .transaction-table th, .transaction-table td {
+        padding: 12px 20px; /* Equal padding for both th and td */
+        text-align: center; /* Center-align content */
+        border: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .transaction-table th {
+        background-color: #1B99BB; /* Set header background to primary color */
+        color: white; /* White text color for the header */
+        text-align: center;
+    }
+
+    .transaction-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .transaction-table tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    .transaction-table td {
+        background: white;
+        font-size: 14px;
+    }
+
+    /* Hover Effect for Rows */
+    .transaction-table tr:hover {
+        background-color: #e9f3f7;
+        cursor: pointer;
+    }
+
+    /* Ensure everything aligns nicely */
+    .transaction-table th, .transaction-table td {
+        word-wrap: break-word; /* Ensures content wraps if it overflows */
+    }
+/* Button Section */
+.summary-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+
+.summary-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+    .summary-buttons button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #1B99BB;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .summary-buttons button:hover {
+            background-color: #005fa3;
+        }

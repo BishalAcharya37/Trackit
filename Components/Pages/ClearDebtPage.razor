@@ -1,0 +1,111 @@
+﻿@page "/cleardebt"
+@using Trackit.Components.Pages
+@inject NavigationManager Navigation
+@using Newtonsoft.Json
+@using System.IO
+@inject IJSRuntime JS
+
+<h3>Clear Debt</h3>
+
+@if (debt != null)
+{
+    <div>
+        <p>Title: @debt.Title</p>
+        <p>Amount: @debt.Amount</p>
+        <p>Remaining Amount: @debt.RemainingAmount</p>
+        <p>Due Date: @debt.DueDate?.ToString("yyyy-MM-dd")</p>
+        <p><strong>Source:</strong> @debt.Source</p>
+    </div>
+
+    <div>
+        <label for="paymentAmount">Enter Payment Amount:</label>
+        <input type="number" @bind="paymentAmount" min="0" max="@debt.RemainingAmount" />
+    </div>
+
+    <div>
+        <button @onclick="ClearDebt">Clear Debt</button>
+    </div>
+}
+else
+{
+    <p>Debt not found!</p>
+}
+
+@code {
+    private Transaction debt;
+    private decimal paymentAmount;
+    private List<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+    // Load transactions and find the debt 
+    protected override async Task OnInitializedAsync()
+    {
+        // Load transactions using TransactionOperations method
+        Transactions = await TransactionOperations.LoadTransactionsAsync();
+
+        
+        debt = Transactions.FirstOrDefault(t => t.TransactionType == TransactionType.Debt && !t.IsClear);
+    }
+
+    // Method to clear the debt
+    private async Task ClearDebt()
+    {
+        if (debt != null)
+        {
+            
+            decimal totalBalance = TransactionOperations.GetTotalBalance(Transactions);
+
+            if (paymentAmount > totalBalance)
+            {
+                await JS.InvokeVoidAsync("alert", "Insufficient balance to clear the debt.");
+                return;
+            }
+
+            // If payment amount is greater than the remaining amount, show an alert
+            if (paymentAmount > debt.RemainingAmount)
+            {
+                await JS.InvokeVoidAsync("alert", "Payment amount exceeds the remaining debt amount.");
+                return;
+            }
+
+            // checking payment amount is greater than reamining amount or not 
+            if (paymentAmount > 0)
+            {
+                
+                debt.RemainingAmount -= paymentAmount;
+
+               
+                if (debt.RemainingAmount == 0)
+                {
+                    debt.IsClear = true;
+                    await JS.InvokeVoidAsync("alert", "Debt has been cleared!");
+                }
+
+                // Create a new transaction for the payment as debit coz paying means debit 
+                var debitTransaction = new Transaction
+                    {
+                        Title = $"Debt Payment for {debt.Title}",
+                        TransactionType = TransactionType.Debit,
+                        Amount = paymentAmount,
+                        Date = DateTime.Now, 
+                        Tags = debt.Tags,
+                        Note = $"Payment for clearing debt: {debt.Title}",
+                        Source = debt.Source, 
+                        IsClear = false
+                    };
+
+                // Add the new debit transaction to the list
+                Transactions.Add(debitTransaction);
+
+                // Save the updated transactions list back to the file using TransactionOperations
+                await TransactionOperations.SaveTransactionsAsync(Transactions);
+
+                // Navigate back to Debt Management page
+                Navigation.NavigateTo("/debtmanage");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Please enter a valid payment amount.");
+            }
+        }
+    }
+}

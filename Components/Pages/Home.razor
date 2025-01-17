@@ -1,5 +1,66 @@
 ﻿@page "/"
+@inject NavigationManager NavMan
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+
+<h1>Hello, User!</h1>
+<p> Please Login to Track the Expense of Personal Finance  </p>
+
+
+    
+
+
+<div class="form-container">
+    <h2>User Login</h2>
+    <form method="POST" @onsubmit="HandleLogin" >
+        <div class="input-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" @bind="username" required>
+        </div>
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" @bind="password" required>
+        </div>
+        <div class="input-group">
+            <label for="currency">Currency:</label>
+            <select id="currency" name="currency" @bind="currency" required>
+                <option value="npr">Nepali Rupee (NPR)</option>
+                <option value="usd">US Dollar (USD)</option>
+                <option value="inr">Indian Rupee (INR)</option>
+                <option value="eur">Euro (EUR)</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <button type="submit" class="submit-btn">Submit</button>
+    </form>
+</div>
+
+
+
+@code{
+    public string username{ get; set; }
+    public string password{ get; set; }
+    public string currency{ get; set; }
+    private void HandleLogin()
+    {
+        if (username ==  "Bishal" && password == "cba123")
+        {
+
+            NavMan.NavigateTo("/dashboard");
+
+
+        }
+
+        else
+        {
+            Console.WriteLine("Error: Invalid Credentials!");
+           
+            
+        }
+
+    }
+
+
+}
+
+

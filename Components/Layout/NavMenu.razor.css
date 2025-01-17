@@ -14,10 +14,9 @@
     .navbar-toggler:checked {
         background-color: rgba(255, 255, 255, 0.5);
     }
-
 .top-row {
     height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: #1B99BB; /* Primary color */
 }
 
 .navbar-brand {
@@ -60,7 +59,7 @@
     }
 
     .nav-item ::deep a {
-        color: #d7d7d7;
+        color: black; /* Change font color to black */
         border-radius: 4px;
         height: 3rem;
         display: flex;
@@ -70,12 +69,12 @@
 
         .nav-item ::deep a.active {
             background-color: rgba(255,255,255,0.37);
-            color: white;
+            color: black; /* Active link font color changed to black */
         }
 
         .nav-item ::deep a:hover {
             background-color: rgba(255,255,255,0.1);
-            color: white;
+            color: black; /* Hover link font color changed to black */
         }
 
 .nav-scrollable {

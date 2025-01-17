@@ -1,0 +1,105 @@
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+    .filters input, .filters select, .filters button {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .filters button {
+        background-color: #0078d4;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+        .filters button:hover {
+            background-color: #005fa3;
+        }
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+}
+
+th {
+    background-color:  #1B99BB
+    ;
+    color: white;
+}
+
+.actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .actions button.edit {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .actions button.delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .actions button.edit:hover {
+        background-color: #e0a800;
+    }
+
+    .actions button.delete:hover {
+        background-color: #c82333;
+    }
+
+.summary-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+    .summary-buttons button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #1B99BB;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .summary-buttons button:hover {
+            background-color: #005fa3;
+        }
